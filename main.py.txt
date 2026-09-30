@@ -1,0 +1,22 @@
+from fastapi import FastAPI
+import google.generativeai as genai
+
+genai.configure(api_key="UNGA_KEY_INGA_PODANUM")
+
+app = FastAPI()
+
+@app.get("/")
+def home():
+    return {"message": "PocketSmart AI is running!"}
+
+@app.get("/validate-gemini")
+def validate():
+    model = genai.GenerativeModel("gemini-1.5-flash")
+    response = model.generate_content("Say Gemini Connected")
+    return {"status": "Success", "reply": response.text}
+
+@app.post("/budget-advice")
+def budget_advice(income: int, expense: int):
+    model = genai.GenerativeModel("gemini-1.5-flash")
+    res = model.generate_content(f"My income {income} expense {expense}. Give 3 budget tips")
+    return {"advice": res.text}
